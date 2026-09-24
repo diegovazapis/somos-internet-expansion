@@ -18,9 +18,9 @@ import json
 
 def render():
     st.title("🌐 Módulo 1: Arquitectura de Red & Topología Nacional")
-    st.caption("Visión jerárquica 2D de 3 capas: Backbone DWDM 400G (Carreteras 1+1), Distribución Metro Activa 100G (ERPS), MicroPOPs FOA AON P2P y Editor GIS")
+    st.caption("Visión jerárquica: Backbone DWDM, Distribución Metro Activa ERPS y Acceso Fibra Óptica Activa FOA")
 
-    tab_vis, tab_editor = st.tabs(["🗺️ Visualizador Topológico 2D (Alta Definición)", "✏️ Editor GIS Interactivo (Editar Vértices & Topología)"])
+    tab_vis, tab_editor = st.tabs(["🗺️ Visualizador Topológico", "✏️ Editor GIS Interactivo"])
 
     service = MapService()
 
