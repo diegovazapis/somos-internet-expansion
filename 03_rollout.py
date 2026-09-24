@@ -32,7 +32,7 @@ def render():
 
     with col_cent:
         st.markdown("#### 🎯 Decisiones Centralizadas (Headquarters)")
-        st.info("- **Estándares de Ingeniería & Red**: Arquitectura DWDM/ERPS/XGS-PON estandarizada.\n"
+        st.info("- **Estándares de Ingeniería & Red**: Arquitectura DWDM/ERPS/FOA AON P2P estandarizada.\n"
                 "- **Negociación Nacional CFE**: Convenio marco corporativo de precios de adosamiento.\n"
                 "- **Asignación de CAPEX**: Priorización nacional basada en VAN/ROI.\n"
                 "- **Homologación de Proveedores**: Homologación Tier 1 de fabricantes (Cisco, Huawei, Corning).")

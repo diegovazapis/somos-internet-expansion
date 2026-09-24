@@ -181,18 +181,44 @@ def run_seed():
         [-89.5926, 20.9676]  # Mérida
     ]
 
+    # Función de offset para generar trazos 1+1 paralelos (Ruta A Primaria + Ruta B Protección)
+    def offset_path(coords, lon_offset=0.03, lat_offset=0.03):
+        path_a = [[round(lon + lon_offset, 4), round(lat + lat_offset, 4)] for lon, lat in coords]
+        path_b = [[round(lon - lon_offset, 4), round(lat - lat_offset, 4)] for lon, lat in coords]
+        return path_a, path_b
+
+    path_cdmx_mty_a, path_cdmx_mty_b = offset_path(path_cdmx_mty_hw, 0.04, 0.04)
+    path_cdmx_gdl_a, path_cdmx_gdl_b = offset_path(path_cdmx_gdl_hw, 0.04, 0.04)
+    path_gdl_mty_a, path_gdl_mty_b = offset_path(path_gdl_mty_hw, 0.04, 0.04)
+    path_gdl_tij_a, path_gdl_tij_b = offset_path(path_gdl_tij_hw, 0.05, 0.05)
+    path_cdmx_mid_a, path_cdmx_mid_b = offset_path(path_cdmx_mid_hw, 0.04, 0.04)
+
     links = [
-        # Backbone Anillo Central y Ramales por Carreteras Federales
-        ("LINK_BB_CDMX_MTY", "CDMX", "Backbone DWDM CDMX-MTY (Carretera 57D)", "NODE_POP_CDMX", "NODE_POP_MTY", "BACKBONE_LONG_HAUL", 920.0, 144, 48, "CFE-LONG-HAUL-01", 45000000.0,
-         json.dumps({"type": "LineString", "coordinates": path_cdmx_mty_hw}), "OPERATIONAL"),
-        ("LINK_BB_CDMX_GDL", "CDMX", "Backbone DWDM CDMX-GDL (Autopista 15D)", "NODE_POP_CDMX", "NODE_POP_GDL", "BACKBONE_LONG_HAUL", 550.0, 144, 48, "CFE-LONG-HAUL-02", 28000000.0,
-         json.dumps({"type": "LineString", "coordinates": path_cdmx_gdl_hw}), "OPERATIONAL"),
-        ("LINK_BB_GDL_MTY", "GDL", "Backbone DWDM GDL-MTY (Autopista 80D Anillo)", "NODE_POP_GDL", "NODE_POP_MTY", "BACKBONE_LONG_HAUL", 790.0, 96, 32, "CFE-LONG-HAUL-03", 38000000.0,
-         json.dumps({"type": "LineString", "coordinates": path_gdl_mty_hw}), "OPERATIONAL"),
-        ("LINK_BB_GDL_TIJ", "GDL", "Backbone DWDM GDL-TIJ (Corredor Pacífico 15D)", "NODE_POP_GDL", "NODE_POP_TIJ", "BACKBONE_LONG_HAUL", 2200.0, 96, 24, "CFE-LONG-HAUL-04", 95000000.0,
-         json.dumps({"type": "LineString", "coordinates": path_gdl_tij_hw}), "OPERATIONAL"),
-        ("LINK_BB_CDMX_MID", "CDMX", "Backbone DWDM CDMX-MID (Corredor Golfo 150D)", "NODE_POP_CDMX", "NODE_POP_MID", "BACKBONE_LONG_HAUL", 1310.0, 96, 24, "CFE-LONG-HAUL-05", 62000000.0,
-         json.dumps({"type": "LineString", "coordinates": path_cdmx_mid_hw}), "OPERATIONAL"),
+        # Backbone DWDM Ruta A Primaria (Amarillo Neón)
+        ("LINK_BB_CDMX_MTY_A", "CDMX", "Backbone DWDM CDMX-MTY (Ruta A Primaria 57D)", "NODE_POP_CDMX", "NODE_POP_MTY", "BACKBONE_LONG_HAUL", 920.0, 144, 48, "CFE-LONG-HAUL-01A", 45000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_cdmx_mty_a}), "OPERATIONAL"),
+        ("LINK_BB_CDMX_MTY_B", "CDMX", "Backbone DWDM CDMX-MTY (Ruta B Protección 1+1)", "NODE_POP_CDMX", "NODE_POP_MTY", "BACKBONE_LONG_HAUL", 925.0, 144, 48, "CFE-LONG-HAUL-01B", 45000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_cdmx_mty_b}), "OPERATIONAL"),
+
+        ("LINK_BB_CDMX_GDL_A", "CDMX", "Backbone DWDM CDMX-GDL (Ruta A Primaria 15D)", "NODE_POP_CDMX", "NODE_POP_GDL", "BACKBONE_LONG_HAUL", 550.0, 144, 48, "CFE-LONG-HAUL-02A", 28000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_cdmx_gdl_a}), "OPERATIONAL"),
+        ("LINK_BB_CDMX_GDL_B", "CDMX", "Backbone DWDM CDMX-GDL (Ruta B Protección 1+1)", "NODE_POP_CDMX", "NODE_POP_GDL", "BACKBONE_LONG_HAUL", 555.0, 144, 48, "CFE-LONG-HAUL-02B", 28000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_cdmx_gdl_b}), "OPERATIONAL"),
+
+        ("LINK_BB_GDL_MTY_A", "GDL", "Backbone DWDM GDL-MTY (Ruta A Primaria 80D)", "NODE_POP_GDL", "NODE_POP_MTY", "BACKBONE_LONG_HAUL", 790.0, 96, 32, "CFE-LONG-HAUL-03A", 38000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_gdl_mty_a}), "OPERATIONAL"),
+        ("LINK_BB_GDL_MTY_B", "GDL", "Backbone DWDM GDL-MTY (Ruta B Protección 1+1)", "NODE_POP_GDL", "NODE_POP_MTY", "BACKBONE_LONG_HAUL", 795.0, 96, 32, "CFE-LONG-HAUL-03B", 38000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_gdl_mty_b}), "OPERATIONAL"),
+
+        ("LINK_BB_GDL_TIJ_A", "GDL", "Backbone DWDM GDL-TIJ (Ruta A Primaria Pacífico)", "NODE_POP_GDL", "NODE_POP_TIJ", "BACKBONE_LONG_HAUL", 2200.0, 96, 24, "CFE-LONG-HAUL-04A", 95000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_gdl_tij_a}), "OPERATIONAL"),
+        ("LINK_BB_GDL_TIJ_B", "GDL", "Backbone DWDM GDL-TIJ (Ruta B Protección 1+1)", "NODE_POP_GDL", "NODE_POP_TIJ", "BACKBONE_LONG_HAUL", 2210.0, 96, 24, "CFE-LONG-HAUL-04B", 95000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_gdl_tij_b}), "OPERATIONAL"),
+
+        ("LINK_BB_CDMX_MID_A", "CDMX", "Backbone DWDM CDMX-MID (Ruta A Primaria Golfo)", "NODE_POP_CDMX", "NODE_POP_MID", "BACKBONE_LONG_HAUL", 1310.0, 96, 24, "CFE-LONG-HAUL-05A", 62000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_cdmx_mid_a}), "OPERATIONAL"),
+        ("LINK_BB_CDMX_MID_B", "CDMX", "Backbone DWDM CDMX-MID (Ruta B Protección 1+1)", "NODE_POP_CDMX", "NODE_POP_MID", "BACKBONE_LONG_HAUL", 1315.0, 96, 24, "CFE-LONG-HAUL-05B", 62000000.0,
+         json.dumps({"type": "LineString", "coordinates": path_cdmx_mid_b}), "OPERATIONAL"),
 
         # Anillos Metropolitanos Cerrados (Seguimiento de Arterias Viales Urbanas)
         ("LINK_METRO_CDMX_RING1", "CDMX", "Anillo Metro CDMX Periférico Norte-Sur", "NODE_POP_CDMX", "NODE_METRO_CDMX_N", "METRO_RING", 18.5, 96, 36, "CFE-METRO-CDMX-01", 3200000.0,
@@ -230,7 +256,47 @@ def run_seed():
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, clusters)
 
-    # 5. Proyecciones Financieras Oficiales
+    # 5. Polígonos de Cobertura (Mancha Urbana FOA)
+    polygons = []
+    for clus_id, c_id, name, homes, subs, arpu, capex, cphp, lat, lon in clusters:
+        d = 0.015
+        poly_geo = {
+            "type": "Polygon",
+            "coordinates": [[
+                [round(lon - d, 4), round(lat - d, 4)],
+                [round(lon + d, 4), round(lat - d, 4)],
+                [round(lon + d, 4), round(lat + d, 4)],
+                [round(lon - d, 4), round(lat + d, 4)],
+                [round(lon - d, 4), round(lat - d, 4)]
+            ]]
+        }
+        polygons.append((
+            f"POLY_{clus_id}", c_id, clus_id, f"Mancha Cobertura FOA {name}", json.dumps(poly_geo), 8.5, "ACTIVE"
+        ))
+
+    cursor.executemany("""
+        INSERT INTO coverage_polygons (polygon_id, city_id, cluster_id, name, geojson_geometry, area_sqkm, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, polygons)
+
+    # 6. Clientes Demo (Edificios FTTB / Empresa / Residencial)
+    clients = [
+        ("CLI_CDMX_BANCOMER", "CDMX", "CLUS_CDMX_POLANCO", "MPOP_CDMX_POL", "Torre BBVA Bancomer Corp", "ENTERPRISE", 2000, 19.4250, -99.1750),
+        ("CLI_CDMX_REFORMA222", "CDMX", "CLUS_CDMX_CONDESA", "MPOP_CDMX_CND", "Reforma 222 Financial Hub", "COMMERCIAL_HUB", 1000, 19.4290, -99.1610),
+        ("CLI_CDMX_SANTAFE_M", "CDMX", "CLUS_CDMX_SANTAFE", "MPOP_CDMX_STF", "Torre Mitikha / Santa Fe Plaza", "RESIDENTIAL_TOWER", 1000, 19.3620, -99.2630),
+        ("CLI_MTY_PUNTOVALLE", "MTY", "CLUS_MTY_SANPEDRO", "MPOP_MTY_SPG", "Punto Valle Corporate Center", "COMMERCIAL_HUB", 2000, 25.6580, -100.4020),
+        ("CLI_MTY_METROPOLITAN", "MTY", "CLUS_MTY_CUMBRES", "MPOP_MTY_CUM", "Metropolitan Center Residencial", "RESIDENTIAL_TOWER", 1000, 25.6510, -100.3680),
+        ("CLI_GDL_LANDMARK", "GDL", "CLUS_GDL_ZAPOPAN", "MPOP_GDL_ZAP", "The Landmark Reserve Puerta de Hierro", "ENTERPRISE", 2000, 20.7120, -103.4120),
+        ("CLI_GDL_MIDTOWN", "GDL", "CLUS_GDL_PROVIDENCIA", "MPOP_GDL_PRV", "Midtown Jalisco Executive Hub", "COMMERCIAL_HUB", 1000, 20.6930, -103.3820),
+        ("CLI_TIJ_VIA_CORPORATE", "TIJ", "CLUS_TIJ_OTAY", "MPOP_TIJ_OTY", "Vía Corporativo Otay Tech", "ENTERPRISE", 1000, 32.5360, -116.9620),
+        ("CLI_MID_MONTEJO_PLAZA", "MID", "CLUS_MID_ALTABRISA", "MPOP_MID_ALT", "Paseo 60 & Altabrisa Financial", "COMMERCIAL_HUB", 1000, 21.0170, -89.5870)
+    ]
+    cursor.executemany("""
+        INSERT INTO demo_clients (client_id, city_id, cluster_id, micropop_node_id, name, client_type, contracted_speed_mbps, latitude, longitude)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, clients)
+
+    # 7. Proyecciones Financieras Oficiales
     financials = []
     city_params = [
         ("CDMX", "Proyección 5 Años Tier 1 Base", 22540000.0, 4800000.0, 580.0, 12200, 0.18),
@@ -251,19 +317,19 @@ def run_seed():
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, financials)
 
-    # 6. Matriz de Riesgos
+    # 8. Matriz de Riesgos
     risks = [
         ("RISK_CFE_01", "CDMX", "REGULATORY", "Demoras en permisos de adosamiento a postería CFE", "Saturación administrativa en la división centro CFE para aprobar dictámenes de tensión.", "HIGH", "HIGH", "Mesa de trabajo técnica bilateral semanal con gerencia regional CFE y prereserva de capacidad.", 8),
         ("RISK_TRAMO_01", "GDL", "TECHNICAL", "Corte crítico en Backbone Fibra Tramo GDL-TIJ", "Accidente de obra civil ajena interrumpe enlace principal de larga distancia.", "CRITICAL", "MEDIUM", "Protección 1+1 activa por ruta alterna DWDM vía MTY y conmutación automática < 50ms.", 9),
         ("RISK_PERMISOS_01", "TIJ", "OPERATIONAL", "Permisos de paso de vía municipales en Tijuana", "Retraso en licencias de construcción de microzanjado urbano por alcaldía.", "MEDIUM", "HIGH", "Acuerdo marco corporativo con cámaras empresariales y despliegue sobre infraestructura CFE existente.", 6),
-        ("RISK_CAPEX_01", "MID", "FINANCIAL", "Volatilidad de costo de insumos de fibra óptica importada", "Incremento en tipo de cambio afecta precio de hilos de fibra XGS-PON y transceptores.", "MEDIUM", "MEDIUM", "Contratos de suministro a precio fijo a 12 meses con proveedores Tier 1.", 5)
+        ("RISK_CAPEX_01", "MID", "FINANCIAL", "Volatilidad de costo de insumos de fibra óptica importada", "Incremento en tipo de cambio afecta precio de hilos de fibra FOA AON y transceptores activos.", "MEDIUM", "MEDIUM", "Contratos de suministro a precio fijo a 12 meses con proveedores Tier 1.", 5)
     ]
     cursor.executemany("""
         INSERT INTO risk_events (risk_id, city_id, category, title, description, severity, probability, mitigation_strategy, impact_score)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, risks)
 
-    # 7. Cadencias de Gobernanza
+    # 9. Cadencias de Gobernanza
     cadences = [
         ("GOV_EXEC_BOARD", "STRATEGIC", "Comité Ejecutivo de Expansión de Red", "Mensual", "CEO, VP Redes, VP Finanzas, Arquitecto de Red", "VAN acumulado, avance CAPEX nacional, ROI a 5 años, alineación estratégica"),
         ("GOV_OPS_WARROOM", "OPERATIONAL", "War Room Semanal de Despliegue & CFE", "Semanal", "Director Despliegue, Gerentes Regionales, Contratistas", "Casas Pasadas por semana, avance de permisos CFE, Costo por Casa Pasada (CPHP < $500 MXN)"),
@@ -276,7 +342,10 @@ def run_seed():
 
     conn.commit()
     conn.close()
-    print("Base de datos SQLite 'somos_network.db' generada exitosamente con Rutas de Carreteras Reales y MicroPOPs SOMOS Colombia.")
+    print("Base de datos SQLite 'somos_network.db' generada exitosamente con Rutas 1+1 Paralelas, Polígonos de Cobertura y Clientes Demo.")
+
+if __name__ == "__main__":
+    run_seed()
 
 if __name__ == "__main__":
     run_seed()

@@ -11,7 +11,7 @@
 
 ## 🧭 Introducción al Guión de la Entrevista
 
-Este documento está diseñado como tu **manual de preparación y guión de presentación en vivo**. Durante la entrevista, tu objetivo no es solo mostrar una aplicación web, sino demostrar autoridad técnica, conocimiento riguroso del mercado de telecomunicaciones en México (CFE, IFT, postería, DWDM, GPON/XGS-PON) y disciplina financiero-ejecutiva (**VAN**, **TIR**, **ROI**, **Payback**, **$CPHP < \$500 \text{ MXN}$**).
+Este documento está diseñado como tu **manual de preparación y guión de presentación en vivo**. Durante la entrevista, tu objetivo no es solo mostrar una aplicación web, sino demostrar autoridad técnica, conocimiento riguroso del mercado de telecomunicaciones en México (CFE, IFT, postería, DWDM, Fibra Óptica Activa FOA / AON P2P) y disciplina financiero-ejecutiva (**VAN**, **TIR**, **ROI**, **Payback**, **$CPHP < \$500 \text{ MXN}$**).
 
 ---
 
@@ -31,17 +31,19 @@ Este documento está diseñado como tu **manual de preparación y guión de pres
    - Anillos de transporte IP/MPLS a 100G en cada ciudad.
    - Protocolo de protección de anillo **ERPS (ITU-T G.8032)** con conmutación en menos de **50 ms**.
    - Despliegue eficiente aprovechando convenios de uso de postería de **CFE (Norma CFE-PROT-2024)** para reducir el CAPEX en más de un 60% frente a zanjado civil tradicional.
-3. **Capa 3: Red de Acceso de Última Milla (FTTH / FTTB)**:
-   - Topología pasiva **GPON / XGS-PON simétrico** (hasta 10Gbps por usuario).
+3. **Capa 3: Red de Acceso FOA de Última Milla (AON Punto a Punto P2P)**:
+   - A diferencia de los operadores tradicionales (Claro, Tigo, Movistar, ETB) que despliegan redes pasivas GPON/PON donde hasta 64 vecinos comparten el mismo canal, **SOMOS Internet opera con tecnología de Fibra Óptica Activa (FOA) / AON Punto a Punto (P2P)**.
+   - Cada cliente/edificio (FTTB) cuenta con un **cable de fibra dedicado** hacia MicroPOPs energizados e inteligentes.
+   - Garantiza **ancho de banda 100% dedicado, velocidad 100% simétrica de hasta 2 Gbps (subida = bajada)** y **cero caídas por saturación en horas pico**.
    - Control de densidad con una meta corporativa estricta de costo de construcción por casa pasada: **$CPHP \le \$500 \text{ MXN}$**."
 
 ### 💻 Funcionalidad Específica de la Aplicación Web
 - **Módulo**: [`01_architecture.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/01_architecture.py) (**01: Arquitectura & Topología**).
 - **Componentes**:
   - Desplegable de selección de ámbito (`MEXICO` o por ciudad `CDMX`, `MTY`, `GDL`, `TIJ`, `MID`).
-  - Selector de filtro por capa de red (`Todas las Capas`, `Backbone DWDM Carreteras`, `Distribución Metro Activa`, `MicroPOPs Acceso SOMOS Colombia`).
-  - Tarjetas de KPIs principales (Nodos de Red, Tramos de Fibra, Clusters de Acceso).
-  - Mapa 2D Plano Topológico en PyDeck (`pitch=0.0`) con primitivas `ScatterplotLayer` (POPs, Cores Metro y MicroPOPs), `PathLayer` (Tramos DWDM sobre Carreteras Federales en amarillo neón y Anillos Metro ERPS en cian) y `ScatterplotLayer` (Clusters de acceso).
+  - Selector de filtro por capa de red (`Todas las Capas`, `Backbone DWDM Carreteras`, `Distribución Metro Activa`, `MicroPOPs Acceso FOA AON P2P SOMOS Colombia`).
+  - Tarjetas de KPIs principales (Nodos de Red, Tramos de Fibra, Clusters de Acceso FOA).
+  - Mapa 2D Plano Topológico en PyDeck (`pitch=0.0`) con primitivas `ScatterplotLayer` (POPs, Cores Metro y MicroPOPs Activos), `PathLayer` (Tramos DWDM sobre Carreteras Federales en amarillo neón y Anillos Metro ERPS en cian) y `ScatterplotLayer` (Clusters de acceso).
   - Fichas de especificaciones técnicas por capa en la parte inferior.
 
 ### 🔄 Flujo de la Información (Data Flow)
@@ -49,13 +51,13 @@ Este documento está diseñado como tu **manual de preparación y guión de pres
 graph LR
     DB[(somos_network.db)] -->|SQL Query| MapService[map_service.py]
     MapService -->|Format GeoJSON & Tooltips| PyDeckBuilder[pydeck_layers.py]
-    PyDeckBuilder -->|Render WebGL 3D| StreamlitUI[01_architecture.py]
+    PyDeckBuilder -->|Render WebGL 2D| StreamlitUI[01_architecture.py]
 ```
 
 ### 🗣️ Forma de Presentar al Entrevistador (Script & Tips)
-- **Qué decir**: *"Permítanme mostrarles en el Módulo 01 la topología de red nacional que hemos modelado para SOMOS Internet. Como pueden ver en el mapa 3D en vivo, tenemos interconectadas 5 ciudades estratégicas a través de una malla DWDM de larga distancia..."*
-- **Acción en vivo**: Selecciona **`🇲🇽 Red Nacional México`** en el menú de la ciudad, pasa el cursor por el tramo **`LINK_BB_CDMX_MTY`** para mostrar el tooltip interactivo con el convenio CFE y los hilos de fibra ocupados.
-- **Tip de Impacto**: Enfatiza la protección de menos de 50ms y el cumplimiento de la norma de postería CFE-PROT-2024.
+- **Qué decir**: *"Permítanme mostrarles en el Módulo 01 la topología de red nacional que hemos modelado para SOMOS Internet. Como pueden ver en el mapa 2D plano en vivo, nuestro gran diferencial tecnológico es la comercialización de nuestra propia Red de Fibra Óptica Activa (FOA) AON Punto a Punto. A diferencia de las redes pasivas GPON de la competencia donde la velocidad se degrada en horas pico al compartirse entre vecinos, en SOMOS Internet entregamos un hilo dedicado con hasta 2 Gbps simétricos..."*
+- **Acción en vivo**: Selecciona **`🇲🇽 Red Nacional México`** en el menú de la ciudad, muestra la tarjeta de diferenciación FOA AON y pasa el cursor por el clúster de acceso para evidenciar el costo por casa pasada $CPHP \le \$500\text{ MXN}$.
+- **Tip de Impacto**: Enfatiza la promesa de valor comercial: ancho de banda dedicado, velocidad simétrica real y cero caídas por saturación urbana FTTB.
 
 ---
 

@@ -230,10 +230,92 @@ class MapService:
             })
         return clusters
 
+    def get_coverage_polygons_gis_data(self, city_id=None):
+        """
+        Retorna los polígonos de mancha urbana de cobertura FOA para PyDeck GeoJsonLayer / PolygonLayer.
+        """
+        conn = self._get_connection()
+        cursor = conn.cursor()
+
+        if city_id and city_id.upper() != "MEXICO":
+            cursor.execute("""
+                SELECT polygon_id, city_id, cluster_id, name, geojson_geometry, area_sqkm, status
+                FROM coverage_polygons
+                WHERE city_id = ?
+            """, (city_id.upper(),))
+        else:
+            cursor.execute("""
+                SELECT polygon_id, city_id, cluster_id, name, geojson_geometry, area_sqkm, status
+                FROM coverage_polygons
+            """)
+        rows = cursor.fetchall()
+        conn.close()
+
+        polygons = []
+        for p_id, c_id, clus_id, name, geojson_str, area, status in rows:
+            geo = json.loads(geojson_str)
+            coords = geo.get("coordinates", [[]])[0]
+            polygons.append({
+                "polygon_id": p_id,
+                "city_id": c_id,
+                "cluster_id": clus_id,
+                "name": name,
+                "polygon": coords,
+                "area_sqkm": area,
+                "status": status,
+                "fill_color": [0, 245, 212, 35], # Cian translucido
+                "line_color": [0, 245, 212, 220], # Borde cian neon
+                "tooltip_line1": f"Cobertura FOA AON | Área: {area} km²",
+                "tooltip_line2": f"Estado: {status} | Fibra Dedicada Directa"
+            })
+        return polygons
+
+    def get_demo_clients_gis_data(self, city_id=None):
+        """
+        Retorna los clientes demo (edificios FTTB/Enterprise) para capas de puntos en PyDeck.
+        """
+        conn = self._get_connection()
+        cursor = conn.cursor()
+
+        if city_id and city_id.upper() != "MEXICO":
+            cursor.execute("""
+                SELECT d.client_id, d.city_id, c.name, d.cluster_id, d.micropop_node_id, d.name, d.client_type, d.contracted_speed_mbps, d.latitude, d.longitude
+                FROM demo_clients d
+                JOIN cities c ON d.city_id = c.city_id
+                WHERE d.city_id = ?
+            """, (city_id.upper(),))
+        else:
+            cursor.execute("""
+                SELECT d.client_id, d.city_id, c.name, d.cluster_id, d.micropop_node_id, d.name, d.client_type, d.contracted_speed_mbps, d.latitude, d.longitude
+                FROM demo_clients d
+                JOIN cities c ON d.city_id = c.city_id
+            """)
+        rows = cursor.fetchall()
+        conn.close()
+
+        clients = []
+        for cli_id, c_id, c_name, clus_id, mpop_id, name, c_type, speed, lat, lon in rows:
+            clients.append({
+                "client_id": cli_id,
+                "city_id": c_id,
+                "city_name": c_name,
+                "name": name,
+                "client_type": c_type,
+                "contracted_speed_mbps": speed,
+                "coordinates": [lon, lat],
+                "color": [247, 37, 133] if c_type == "ENTERPRISE" else [114, 9, 183], # Magenta / Morado
+                "radius": 400,
+                "tooltip_line1": f"Cliente FTTB: {c_type} | Ciudad: {c_name}",
+                "tooltip_line2": f"Conexión AON P2P Dedicada: {speed:,} Mbps Simétricos"
+            })
+        return clients
+
 if __name__ == "__main__":
     service = MapService()
     nodes = service.get_nodes_gis_data("CDMX")
     links = service.get_fiber_links_gis_data("CDMX")
     clusters = service.get_access_clusters_gis_data("CDMX")
+    polys = service.get_coverage_polygons_gis_data("CDMX")
+    clients = service.get_demo_clients_gis_data("CDMX")
     print(f"--- MAP SERVICE DEMO (CDMX) ---")
-    print(f"Nodos CDMX: {len(nodes)} | Tramos CDMX: {len(links)} | Clusters CDMX: {len(clusters)}")
+    print(f"Nodos: {len(nodes)} | Tramos: {len(links)} | Clusters: {len(clusters)} | Polígonos: {len(polys)} | Clientes Demo: {len(clients)}")

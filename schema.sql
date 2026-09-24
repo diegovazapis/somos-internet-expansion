@@ -105,9 +105,36 @@ CREATE TABLE IF NOT EXISTS governance_cadences (
     kpis_reviewed TEXT NOT NULL
 );
 
+-- 8. Tabla de Polígonos de Cobertura (Mancha Urbana FOA)
+CREATE TABLE IF NOT EXISTS coverage_polygons (
+    polygon_id VARCHAR(30) PRIMARY KEY,
+    city_id VARCHAR(10) NOT NULL REFERENCES cities(city_id) ON DELETE CASCADE,
+    cluster_id VARCHAR(20) REFERENCES access_clusters(cluster_id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    geojson_geometry TEXT NOT NULL,
+    area_sqkm REAL NOT NULL,
+    status VARCHAR(20) DEFAULT 'ACTIVE'
+);
+
+-- 9. Tabla de Clientes Demo (Edificios FTTB / Clientes Activos P2P)
+CREATE TABLE IF NOT EXISTS demo_clients (
+    client_id VARCHAR(30) PRIMARY KEY,
+    city_id VARCHAR(10) NOT NULL REFERENCES cities(city_id) ON DELETE CASCADE,
+    cluster_id VARCHAR(20) REFERENCES access_clusters(cluster_id) ON DELETE CASCADE,
+    micropop_node_id VARCHAR(20) REFERENCES network_nodes(node_id) ON DELETE SET NULL,
+    name VARCHAR(100) NOT NULL,
+    client_type VARCHAR(30) NOT NULL CHECK (client_type IN ('ENTERPRISE', 'RESIDENTIAL_TOWER', 'COMMERCIAL_HUB')),
+    contracted_speed_mbps INT NOT NULL DEFAULT 1000,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL,
+    status VARCHAR(20) DEFAULT 'ACTIVE'
+);
+
 -- Índices de Rendimiento Geoespacial y Consultas Frecuentes
 CREATE INDEX IF NOT EXISTS idx_nodes_city ON network_nodes(city_id);
 CREATE INDEX IF NOT EXISTS idx_links_city ON fiber_links(city_id);
 CREATE INDEX IF NOT EXISTS idx_clusters_city ON access_clusters(city_id);
 CREATE INDEX IF NOT EXISTS idx_financial_city ON financial_projections(city_id);
 CREATE INDEX IF NOT EXISTS idx_links_nodes ON fiber_links(origin_node_id, destination_node_id);
+CREATE INDEX IF NOT EXISTS idx_coverage_city ON coverage_polygons(city_id);
+CREATE INDEX IF NOT EXISTS idx_clients_city ON demo_clients(city_id);

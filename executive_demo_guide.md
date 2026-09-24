@@ -20,8 +20,9 @@
 ### Paso 2: Recorrido por Módulos y Preguntas Clave del Examen
 
 #### 📍 Módulo 01: Arquitectura & Topología Nacional (Pregunta 1)
-- Seleccionar **🇲🇽 Red Nacional México** en el desplegable.
-- Mostrar el mapa 3D en PyDeck con las primitivas `ColumnLayer` (Nodos POP y Hubs) y `PathLayer` (Malla Backbone DWDM 400G en Amarillo Neón).
+- Seleccionar **🇲🇽 Red Nacional México** en el desplegable y activar el filtro 2D por capa de red.
+- Enfatizar el diferencial tecnológico de SOMOS Internet: **Red propia de Fibra Óptica Activa (FOA) / AON Punto a Punto (P2P)** con fibra dedicada por cliente/edificio (FTTB), entregando **hasta 2 Gbps simétricos (subida = bajada)** sin saturación ni competencia con vecinos.
+- Mostrar el mapa 2D plano en PyDeck con primitivas `ScatterplotLayer` (POPs, Cores Metro y MicroPOPs Activos AON) y `PathLayer` (Malla Backbone DWDM 400G en Amarillo Neón y Anillos Metro en Cian).
 - Explicar la disponibilidad del **99.999%** y el uso de la postería CFE bajo la norma **CFE-PROT-2024**.
 
 #### 🎯 Módulo 02: Estrategia de Expansión & Trade-offs (Pregunta 10)

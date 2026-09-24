@@ -12,7 +12,7 @@ from map_service import MapService
 
 def render():
     st.title("🌐 Módulo 1: Arquitectura de Red & Topología Nacional")
-    st.caption("Visión jerárquica 2D de 3 capas: Backbone DWDM 400G (Carreteras), Anillos Metro ERPS 100G (Redes Activas) y MicroPOPs SOMOS Colombia (Acceso XGS-PON/GPON)")
+    st.caption("Visión jerárquica 2D de 3 capas: Backbone DWDM 400G (Carreteras), Distribución Metro Activa 100G (ERPS) y Acceso Fibra Óptica Activa (FOA) / AON Punto a Punto (P2P)")
 
     # Controles de navegación y filtrado por ciudad y capa
     col_sel, col_filter, col_stat1, col_stat2, col_stat3 = st.columns([2, 2, 1, 1, 1])
@@ -32,7 +32,7 @@ def render():
                 "ALL": "🟡🔵🟢 Todas las Capas (Visión Completa 2D)",
                 "BACKBONE": "🟡 Backbone DWDM (Anillos Redundantes Carreteras)",
                 "METRO": "🔵 Distribución Metro (Redes Activas IP/MPLS ERPS)",
-                "MICROPOP_ACCESS": "🟢 Acceso Última Milla (MicroPOPs SOMOS Colombia)"
+                "MICROPOP_ACCESS": "🟢 Acceso Fibra Óptica Activa FOA (AON P2P MicroPOPs)"
             }[x]
         )
 
@@ -46,11 +46,18 @@ def render():
     with col_stat2:
         st.metric("Tramos de Fibra", len(links))
     with col_stat3:
-        st.metric("Clusters Acceso", len(clusters))
+        st.metric("Clusters Acceso FOA", len(clusters))
+
+    # Banner de Diferencial Tecnológico SOMOS Internet
+    st.info(
+        "⚡ **Diferencial Competitivo SOMOS Internet — Red de Fibra Óptica Activa (FOA) / AON Punto a Punto**:\n\n"
+        "A diferencia de los operadores tradicionales (Claro, Tigo, Movistar, ETB) que despliegan redes pasivas GPON/PON donde hasta 64 vecinos comparten la misma fibra, **SOMOS Internet opera con arquitectura AON (Active Optical Network) Punto a Punto (P2P)**. "
+        "Cada cliente/edificio (FTTB) cuenta con un **cable de fibra dedicado** conectado a MicroPOPs energizados e inteligentes, garantizando **ancho de banda 100% dedicado, velocidad 100% simétrica de hasta 2 Gbps (subida = bajada)** y **cero caídas por saturación en horas pico**."
+    )
 
     # Mapa 2D Plano Interactivo PyDeck
     st.markdown("### 🗺️ Mapa de Topología de Red (Vista Superior 2D Plana)")
-    st.caption("🟢 **MicroPOPs (Cian/Verde)** | 🔵 **Core Metro (Azul)** | 🔴 **POP Nacional (Rojo)** | 🟡 **Carreteras Backbone (Amarillo)** | 🔵 **Anillos Metro (Cian)**")
+    st.caption("🟢 **MicroPOPs Activos AON (Cian/Verde)** | 🔵 **Core Metro (Azul)** | 🔴 **POP Nacional (Rojo)** | 🟡 **Carreteras Backbone (Amarillo)** | 🔵 **Anillos Metro (Cian)**")
     
     deck = render_national_network_deck(city_selected, pitch=0.0, layer_filter=layer_option)
     st.pydeck_chart(deck, use_container_width=True)
@@ -74,10 +81,10 @@ def render():
                    "**Infraestructura**: Compartición de postería CFE (Norma CFE-PROT-2024)")
 
     with col_c3:
-        st.markdown("#### 🟢 3. Acceso Última Milla (MicroPOPs)")
-        st.warning("**Tecnología**: GPON / XGS-PON Simétrico desde **MicroPOPs Descentralizados (Modelo SOMOS Colombia)**\n\n"
-                   "**Eficiencia CAPEX**: Costo por casa pasada **CPHP <= $500 MXN**\n\n"
-                   "**Cobertura**: Residencial & Empresarial de Alta Densidad")
+        st.markdown("#### 🟢 3. Acceso FOA / AON Punto a Punto")
+        st.warning("**Tecnología**: **Fibra Óptica Activa (FOA) / AON P2P** desde **MicroPOPs Energizados (Modelo SOMOS Colombia)**\n\n"
+                   "**Garantía**: Hilo dedicado por cliente/edificio, **hasta 2 Gbps simétricos (Subida = Bajada)** sin saturación\n\n"
+                   "**Eficiencia CAPEX**: Costo por casa pasada **CPHP <= $500 MXN**")
 
 if __name__ == "__main__":
     st.set_page_config(page_title="SOMOS Internet - Arquitectura", layout="wide")
