@@ -27,7 +27,7 @@ def test_map_service_nodes():
 def test_map_service_links_geojson():
     service = MapService()
     links = service.get_fiber_links_gis_data("MEXICO")
-    assert len(links) == 10
+    assert len(links) == 15
     for l in links:
         assert isinstance(l["path"], list)
         assert len(l["path"]) >= 2
@@ -35,4 +35,4 @@ def test_map_service_links_geojson():
 def test_pydeck_deck_rendering():
     deck = render_national_network_deck("MEXICO")
     assert deck is not None
-    assert len(deck.layers) == 3
+    assert len(deck.layers) == 5

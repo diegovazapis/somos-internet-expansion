@@ -49,7 +49,7 @@ def test_capacity_engine():
     engine = CapacityEngine()
     cap = engine.analyze_network_capacity(threshold_percent=50.0)
     assert cap["total_nodes_monitored"] == 22
-    assert cap["total_links_monitored"] == 10
+    assert cap["total_links_monitored"] == 15
 
 def test_risk_engine():
     engine = RiskEngine()

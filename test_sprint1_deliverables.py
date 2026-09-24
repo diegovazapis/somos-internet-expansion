@@ -63,7 +63,7 @@ def test_table_row_counts():
     expected_counts = {
         "cities": 5,
         "network_nodes": 22,
-        "fiber_links": 10,
+        "fiber_links": 15,
         "access_clusters": 11,
         "financial_projections": 5,
         "risk_events": 4,

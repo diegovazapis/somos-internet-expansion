@@ -259,7 +259,7 @@ def run_seed():
     # 5. Polígonos de Cobertura (Mancha Urbana FOA)
     polygons = []
     for clus_id, c_id, name, homes, subs, arpu, capex, cphp, lat, lon in clusters:
-        d = 0.015
+        d = 0.045 # ~5 km de cobertura urbana por MicroPOP
         poly_geo = {
             "type": "Polygon",
             "coordinates": [[
