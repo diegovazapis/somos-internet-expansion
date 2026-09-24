@@ -119,26 +119,29 @@ def render():
         ed_links = service.get_fiber_links_gis_data(ed_city)
         ed_polys = service.get_coverage_polygons_gis_data(ed_city)
 
-        # Crear Mapa de Folium con Herramientas Leaflet Draw
+        # Crear Mapa de Folium con Herramientas Leaflet Draw y Capa Editable
         m = folium.Map(
             location=[viewport["latitude"], viewport["longitude"]],
             zoom_start=viewport["zoom"],
-            tiles="CartoDB dark_matter"
+            tiles="OpenStreetMap"
         )
 
-        # Agregar Polígonos de Cobertura al Mapa
+        # FeatureGroup dedicado para almacenar elementos editables en Leaflet Draw
+        fg = folium.FeatureGroup(name="Capas Editables GIS Topología")
+
+        # Agregar Polígonos de Cobertura al FeatureGroup
         for p in ed_polys:
             folium.Polygon(
                 locations=[[lat, lon] for lon, lat in p["polygon"]],
                 color="#00f5d4",
                 fill=True,
                 fill_color="#00f5d4",
-                fill_opacity=0.2,
+                fill_opacity=0.25,
                 weight=2,
                 popup=f"Polígono: {p['name']}"
-            ).add_to(m)
+            ).add_to(fg)
 
-        # Agregar Tramos de Fibra al Mapa
+        # Agregar Tramos de Fibra al FeatureGroup
         for l in ed_links:
             coords_latlon = [[lat, lon] for lon, lat in l["path"]]
             line_color = "#ffb703" if "BACKBONE" in l["link_type"] else "#00b4d8"
@@ -147,24 +150,23 @@ def render():
                 color=line_color,
                 weight=5 if "BACKBONE" in l["link_type"] else 3,
                 popup=f"Tramo: {l['name']}"
-            ).add_to(m)
+            ).add_to(fg)
 
-        # Agregar Nodos al Mapa
+        # Agregar Nodos al FeatureGroup
         for n in ed_nodes:
             node_color = "red" if n["node_type"] == "NATIONAL_POP" else ("blue" if n["node_type"] == "METRO_CORE" else "green")
-            folium.CircleMarker(
+            folium.Marker(
                 location=[n["latitude"], n["longitude"]],
-                radius=8 if n["node_type"] == "NATIONAL_POP" else 6,
-                color=node_color,
-                fill=True,
-                fill_color=node_color,
-                fill_opacity=0.8,
+                icon=folium.Icon(color="red" if n["node_type"] == "NATIONAL_POP" else ("blue" if n["node_type"] == "METRO_CORE" else "green")),
                 popup=f"Nodo: {n['name']} ({n['node_type']})"
-            ).add_to(m)
+            ).add_to(fg)
 
-        # Barra de Herramientas Leaflet Draw
+        fg.add_to(m)
+
+        # Barra de Herramientas Leaflet Draw vinculada al FeatureGroup de elementos existentes
         draw = Draw(
             export=True,
+            feature_group=fg,
             filename=f"somos_{ed_city.lower()}_edited.geojson",
             position="topleft",
             draw_options={
@@ -175,7 +177,10 @@ def render():
                 "marker": True,
                 "circlemarker": False
             },
-            edit_options={"edit": True, "remove": True}
+            edit_options={
+                "edit": True,
+                "remove": True
+            }
         )
         draw.add_to(m)
 
