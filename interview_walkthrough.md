@@ -119,24 +119,26 @@ graph LR
 - *Ejecución Local Regional*: Supervisión en campo de contratistas, atención a brigadas y relación con alcaldías."
 
 ### 💻 Funcionalidad Específica de la Aplicación Web
-- **Módulo**: [`03_rollout.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/03_rollout.py) (**03: Modelo Operativo & Despliegue**).
+- **Módulo**: [`03_rollout.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/03_rollout.py) (**03: Modelo Operativo & Motor Normativo CFE**).
 - **Componentes**:
-  - Acordeones interactivos (`st.expander`) detallando las 5 Fases del despliegue cronológico.
-  - Columnas comparativas de Centralización HQ vs Ejecución Local.
-  - Alerta destacada sobre cumplimiento obligatorio de la norma **CFE-PROT-2024** (separación mínima 1.8m de media tensión).
+  - **Motor Normativo & Citas Literales CFE (Pestaña 1)**: Buscador interactivo de párrafos literales de las normas CFE GD-O-GEN-LC-001, CRE DACG y NOM-001-SEDE para elementos clave (**Guardacabos NMX-H-004**, **Cable ADSS Dieléctrico**, **Remates Preformados Helicoidales**, **Flejes AISI 316**, **Herrajes de Suspensión J**).
+  - **Simulador de Libramientos & Carga Mecánica ADSS (Pestaña 2)**: Calculadora en tiempo real de separaciones de seguridad (1.85m MT / 0.35m telecom) y cargas mecánica en postes CFE PCR-12-750.
+  - **5 Fases del Despliegue Cronológico (Pestaña 3)**: Acordeones interactivos detallando ingeniería, SEAS CFE, construcción ADSS, fusión OTDR y entrega a NOC.
+  - **Expediente Digital SEAS (Pestaña 4)**: Checklist auditado de entregables para CFE Distribución (KMZ, Memoria Mecánica DCCIAMBT, Reporte Fotográfico 360°).
 
 ### 🔄 Flujo de la Información (Data Flow)
 ```mermaid
 graph TD
-    HQ[Headquarters Central] -->|Estándares & Compras CAPEX| Reg[Gerencias Regionales]
-    Reg -->|Supervisión Contratistas| Field[Campos & Postería CFE]
-    Field -->|Pruebas OTDR & Certificación| NOC[NOC Central Monitoreo]
+    NormDB[(Normas CFE GD-O-GEN-LC-001 / NOM / CRE)] -->|Indexación Dinámica| SearchEngine[03_rollout.py Tab 1]
+    SearchEngine -->|Citas Literales & Secciones| ComplianceCard[Ficha de Cumplimiento]
+    UserParams[Poste PCR + Cable ADSS] -->|Simulación Libramientos| PhysicsEngine[03_rollout.py Tab 2]
+    PhysicsEngine -->|Calculo Cargas & Distancias| DictamenSEAS[Dictamen Factibilidad CFE]
 ```
 
 ### 🗣️ Forma de Presentar al Entrevistador (Script & Tips)
-- **Qué decir**: *"En el Módulo 03 muestro el modelo operativo para controlar el despliegue en campo. Para evitar retrasos con contratistas, dividimos las responsabilidades: el HQ negocia los precios marco y la ingeniería estándar, mientras que las brigadas locales gestionan los trámites municipales..."*
-- **Acción en vivo**: Despliega el acordeón de la **Fase 2: Gestión de Permisos** y señala la norma CFE.
-- **Tip de Impacto**: Explica que la certificación OTDR es la condición contractual indispensable para liberar los pagos de CAPEX a los contratistas.
+- **Qué decir**: *"En el Módulo 03 no solo mostramos las 5 fases de despliegue, sino que hemos integrado un Motor Normativo Dinámico conectado a los Lineamientos Técnicos CFE GD-O-GEN-LC-001 y las Disposiciones CRE. Si seleccionamos un componente como los guardacabos de remate o el cable ADSS, la herramienta recupera el párrafo literal exacto de la norma CFE exigido para la aprobación del dictamen SEAS..."*
+- **Acción en vivo**: Dirígete al Módulo 03, Pestaña 1 **`🔍 Motor Normativo & Citas Literales CFE`**, selecciona **`Guardacabos de Acero Galvanizado`** para mostrar la cita literal de la especificación CFE 2D100-01 (Sección 6.4.2), y luego cambia a la Pestaña 2 para mover los selectores del **Simulador de Libramientos ADSS**.
+- **Tip de Impacto**: Enfatiza que la plataforma es un repositorio vivo que continuará indexando nuevas normas y adendas técnicas de CFE y CRE a medida que se publiquen.
 
 ---
 
