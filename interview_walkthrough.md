@@ -38,26 +38,35 @@ Este documento está diseñado como tu **manual de preparación y guión de pres
    - Control de densidad con una meta corporativa estricta de costo de construcción por casa pasada: **$CPHP \le \$500 \text{ MXN}$**."
 
 ### 💻 Funcionalidad Específica de la Aplicación Web
-- **Módulo**: [`01_architecture.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/01_architecture.py) (**01: Arquitectura & Topología**).
-- **Componentes**:
-  - Desplegable de selección de ámbito (`MEXICO` o por ciudad `CDMX`, `MTY`, `GDL`, `TIJ`, `MID`).
-  - Selector de filtro por capa de red (`Todas las Capas`, `Backbone DWDM Carreteras`, `Distribución Metro Activa`, `MicroPOPs Acceso FOA AON P2P SOMOS Colombia`).
-  - Tarjetas de KPIs principales (Nodos de Red, Tramos de Fibra, Clusters de Acceso FOA).
-  - Mapa 2D Plano Topológico en PyDeck (`pitch=0.0`) con primitivas `ScatterplotLayer` (POPs, Cores Metro y MicroPOPs Activos), `PathLayer` (Tramos DWDM sobre Carreteras Federales en amarillo neón y Anillos Metro ERPS en cian) y `ScatterplotLayer` (Clusters de acceso).
-  - Fichas de especificaciones técnicas por capa en la parte inferior.
+- **Módulo**: [`01_architecture.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/01_architecture.py) (**01: Arquitectura de Red & Geointeligencia de Mercado**).
+- **Estructura de 2 Mapas Independientes**:
+  1. **Mapa 1: Topología Física & Arquitectura de Red (Visor 2D PyDeck & Editor Leaflet Draw)**:
+     - Trazados en amarillo (Backbone Ruta A) y naranja (Protección 1+1 Ruta B) sobre carreteras federales.
+     - Anillos Metro ERPS en cian y MicroPOPs activos en verde con hilos dedicados P2P a clientes FTTB.
+     - **Editor GIS Interactivo Leaflet Draw**: Edición y guardado de vértices directamente en la base SQLite `somos_network.db`.
+  2. **Mapa 2: Geointeligencia & Análisis de Viabilidad de Mercado por AGEBs (Matriz INEGI / AMAI 2x2)**:
+     - **Metodología Micro-Urbana por AGEB**: Fusión de Vivienda Horizontal (Censo INEGI SCINCE) + Nivel Socioeconómico (Regla AMAI A/B, C+, C, C-) + Capa de Competidores DENUE.
+     - **Matriz de Factibilidad 2x2**:
+       - 🟢 **Cuadrante 1: Oportunidad Premium** (NSE Alto + Alta Densidad Horizontal, ej. Satélite, San Pedro, Puerta de Hierro).
+       - 🔵 **Cuadrante 2: Nicho Vertical / Corp** (NSE Alto + Densidad Vertical FTTB, ej. Polanco, Santa Fe, Valle Oriente).
+       - 🟡 **Cuadrante 3: Mercado Masivo / Periferia** (NSE Medio/Bajo + Alta Densidad Horizontal, ej. Tecámac, Tlajomulco, Juárez).
+       - 🔴 **Cuadrante 4: Descarte / Zonas Especiales** (NSE Bajo + Baja Densidad Horizontal, Industria/Comercio).
+     - **Mapa de Calor PyDeck por AGEB** y Tabla de Micro-Factibilidad con score de atracción y CPHP estimado.
 
 ### 🔄 Flujo de la Información (Data Flow)
 ```mermaid
-graph LR
-    DB[(somos_network.db)] -->|SQL Query| MapService[map_service.py]
-    MapService -->|Format GeoJSON & Tooltips| PyDeckBuilder[pydeck_layers.py]
-    PyDeckBuilder -->|Render WebGL 2D| StreamlitUI[01_architecture.py]
+graph TD
+    DB[(somos_network.db)] -->|SQL Query Topología| MapService[map_service.py]
+    INEGI[(Censo SCINCE + AMAI + DENUE)] -->|Simulación AGEBs| MapService
+    MapService -->|Render Mapa 1 Topología| PyDeck1[pydeck_layers.py render_national_network_deck]
+    MapService -->|Render Mapa 2 AGEBs| PyDeck2[pydeck_layers.py render_ageb_market_deck]
+    PyDeck1 & PyDeck2 -->|Visor Dual Selector| StreamlitUI[01_architecture.py]
 ```
 
 ### 🗣️ Forma de Presentar al Entrevistador (Script & Tips)
-- **Qué decir**: *"Permítanme mostrarles en el Módulo 01 la topología de red nacional que hemos modelado para SOMOS Internet. Como pueden ver en el mapa 2D plano en vivo, nuestro gran diferencial tecnológico es la comercialización de nuestra propia Red de Fibra Óptica Activa (FOA) AON Punto a Punto. A diferencia de las redes pasivas GPON de la competencia donde la velocidad se degrada en horas pico al compartirse entre vecinos, en SOMOS Internet entregamos un hilo dedicado con hasta 2 Gbps simétricos..."*
-- **Acción en vivo**: Selecciona **`🇲🇽 Red Nacional México`** en el menú de la ciudad, muestra la tarjeta de diferenciación FOA AON y pasa el cursor por el clúster de acceso para evidenciar el costo por casa pasada $CPHP \le \$500\text{ MXN}$.
-- **Tip de Impacto**: Enfatiza la promesa de valor comercial: ancho de banda dedicado, velocidad simétrica real y cero caídas por saturación urbana FTTB.
+- **Qué decir**: *"En el Módulo 01 hemos integrado dos mapas independientes: el Mapa 1 nos muestra la topología física de la red con redundancia 1+1 y acceso FOA AON P2P. Pero antes de trazar fibra, utilizamos el Mapa 2 de Geointeligencia de Mercado por AGEBs del INEGI. Aquí cruzamos la concentración de viviendas horizontales con el Nivel Socioeconómico AMAI en una Matriz 2x2 para identificar zonas de alta plusvalía o de penetración masiva de Océano Azul con CPHP <= $500 MXN..."*
+- **Acción en vivo**: Muestra primero el **Mapa 1**, luego cambia el radio button selector a **`Mapa 2: Geointeligencia & Factibilidad de Mercado por AGEBs`**, filtra por `Cuadrante 1: Oportunidad Premium` y muestra cómo el mapa de calor y la tabla identifican micro-zonas clave como Satélite o San Pedro.
+- **Tip de Impacto**: Enfatiza que esta metodología de geointeligencia evita gastar CAPEX en zonas de baja densidad o alta saturación competitiva (DENUE).
 
 ---
 

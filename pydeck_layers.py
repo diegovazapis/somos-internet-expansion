@@ -172,6 +172,68 @@ def render_national_network_deck(city_id="MEXICO", pitch=0.0, db_path=None, laye
     )
     return deck
 
+def create_ageb_market_layer(ageb_data):
+    """
+    Crea la capa ScatterplotLayer para las micro-zonas AGEBs (Geointeligencia de Mercado INEGI/AMAI).
+    """
+    return pdk.Layer(
+        "ScatterplotLayer",
+        data=ageb_data,
+        get_position="coordinates",
+        get_color="color",
+        get_radius="radius",
+        radius_scale=1,
+        radius_min_pixels=10,
+        radius_max_pixels=35,
+        pickable=True,
+        opacity=0.85,
+        stroked=True,
+        get_line_color=[255, 255, 255],
+        line_width_min_pixels=2,
+    )
+
+def render_ageb_market_deck(city_id="MEXICO", filter_quadrant=None, db_path=None):
+    """
+    Ensambla el Mapa 2 del Módulo 01: Geointeligencia de Mercado & Viabilidad por AGEBs INEGI / AMAI.
+    """
+    service = MapService(db_path=db_path)
+    viewport = service.get_viewport_for_city(city_id)
+    agebs = service.get_ageb_market_feasibility_data(city_id, filter_quadrant=filter_quadrant)
+
+    layers = []
+    if agebs:
+        layers.append(create_ageb_market_layer(agebs))
+
+    initial_view_state = pdk.ViewState(
+        latitude=viewport["latitude"],
+        longitude=viewport["longitude"],
+        zoom=viewport["zoom"],
+        pitch=0.0,
+        bearing=0.0
+    )
+
+    tooltip = {
+        "html": "<div style='color: #00f5d4; font-weight: bold; font-size: 13px;'>{name}</div><div style='color: #e2e8f0; font-size: 11px; margin-top: 3px;'>{tooltip_line1}</div><div style='color: #94a3b8; font-size: 11px; margin-top: 2px;'>{tooltip_line2}</div>",
+        "style": {
+            "backgroundColor": "#0b0f19",
+            "color": "#ffffff",
+            "border": "1px solid #1e293b",
+            "borderRadius": "6px",
+            "padding": "8px 12px",
+            "boxShadow": "0 4px 6px -1px rgba(0, 0, 0, 0.5)"
+        }
+    }
+
+    deck = pdk.Deck(
+        layers=layers,
+        initial_view_state=initial_view_state,
+        map_style=pdk.map_styles.CARTO_DARK,
+        tooltip=tooltip
+    )
+    return deck
+
 if __name__ == "__main__":
     deck = render_national_network_deck("MEXICO")
-    print("PyDeck map object constructed successfully for national network (2D Highway Mode).")
+    deck_mkt = render_ageb_market_deck("MEXICO")
+    print("PyDeck map object constructed successfully for national network & AGEB Market Deck.")
+

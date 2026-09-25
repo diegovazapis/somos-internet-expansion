@@ -310,6 +310,98 @@ class MapService:
             })
         return clients
 
+    def get_ageb_market_feasibility_data(self, city_id=None, filter_quadrant=None):
+        """
+        Retorna los datos simulados de Geointeligencia por AGEBs (INEGI SCINCE / AMAI / DENUE)
+        para el Mapa 2 del Módulo 01 (Matriz de Factibilidad de Mercado 2x2).
+        """
+        raw_agebs = [
+            # CDMX
+            {"ageb_id": "0901500010123", "city_id": "CDMX", "city_name": "Ciudad de México", "name": "Satélite Residencial", "lat": 19.5123, "lon": -99.2345, "viviendas": 4250, "pct_horiz": 84.5, "densidad": 2850, "nse": "A/B", "internet": 92.0, "denue": 2, "quadrant": "Q1", "cphp": 415.0},
+            {"ageb_id": "0901500010124", "city_id": "CDMX", "city_name": "Ciudad de México", "name": "Coyoacán Centro Residencial", "lat": 19.3498, "lon": -99.1620, "viviendas": 3890, "pct_horiz": 79.2, "densidad": 2600, "nse": "C+", "internet": 88.5, "denue": 1, "quadrant": "Q1", "cphp": 425.0},
+            {"ageb_id": "0901500010125", "city_id": "CDMX", "city_name": "Ciudad de México", "name": "Polanco / Reforma Corporativo", "lat": 19.4326, "lon": -99.1912, "viviendas": 1820, "pct_horiz": 18.5, "densidad": 950, "nse": "A/B", "internet": 96.0, "denue": 4, "quadrant": "Q2", "cphp": 485.0},
+            {"ageb_id": "0901500010126", "city_id": "CDMX", "city_name": "Ciudad de México", "name": "Santa Fe Contadero Vertical", "lat": 19.3621, "lon": -99.2611, "viviendas": 1450, "pct_horiz": 22.0, "densidad": 820, "nse": "A/B", "internet": 94.0, "denue": 3, "quadrant": "Q2", "cphp": 490.0},
+            {"ageb_id": "0901500010127", "city_id": "CDMX", "city_name": "Ciudad de México", "name": "Tecámac / Ecatepec Norte Horiz", "lat": 19.6012, "lon": -99.0123, "viviendas": 7800, "pct_horiz": 91.0, "densidad": 4100, "nse": "C-", "internet": 68.0, "denue": 1, "quadrant": "Q3", "cphp": 395.0},
+            {"ageb_id": "0901500010128", "city_id": "CDMX", "city_name": "Ciudad de México", "name": "Vallejo Zona Industrial", "lat": 19.4890, "lon": -99.1550, "viviendas": 650, "pct_horiz": 12.0, "densidad": 350, "nse": "D+", "internet": 55.0, "denue": 3, "quadrant": "Q4", "cphp": 620.0},
+
+            # MTY
+            {"ageb_id": "1903900010201", "city_id": "MTY", "city_name": "Monterrey", "name": "San Pedro Garza García Residencial", "lat": 25.6580, "lon": -100.3680, "viviendas": 3400, "pct_horiz": 81.0, "densidad": 2300, "nse": "A/B", "internet": 95.0, "denue": 2, "quadrant": "Q1", "cphp": 420.0},
+            {"ageb_id": "1903900010202", "city_id": "MTY", "city_name": "Monterrey", "name": "Valle Oriente Torre Vertical", "lat": 25.6420, "lon": -100.3180, "viviendas": 1950, "pct_horiz": 25.0, "densidad": 1100, "nse": "A/B", "internet": 93.0, "denue": 3, "quadrant": "Q2", "cphp": 475.0},
+            {"ageb_id": "1903900010203", "city_id": "MTY", "city_name": "Monterrey", "name": "Juárez / García Periferia Horiz", "lat": 25.6500, "lon": -100.1800, "viviendas": 6200, "pct_horiz": 94.0, "densidad": 3800, "nse": "C-", "internet": 71.0, "denue": 1, "quadrant": "Q3", "cphp": 390.0},
+            {"ageb_id": "1903900010204", "city_id": "MTY", "city_name": "Monterrey", "name": "Santa Catarina Industrial", "lat": 25.6800, "lon": -100.4600, "viviendas": 580, "pct_horiz": 15.0, "densidad": 400, "nse": "D+", "internet": 58.0, "denue": 2, "quadrant": "Q4", "cphp": 650.0},
+
+            # GDL
+            {"ageb_id": "1403900010301", "city_id": "GDL", "city_name": "Guadalajara", "name": "Puerta de Hierro / Providencia", "lat": 20.7100, "lon": -103.4100, "viviendas": 3600, "pct_horiz": 77.0, "densidad": 2500, "nse": "A/B", "internet": 91.0, "denue": 2, "quadrant": "Q1", "cphp": 430.0},
+            {"ageb_id": "1403900010302", "city_id": "GDL", "city_name": "Guadalajara", "name": "Americana / Chapultepec Corp", "lat": 20.6750, "lon": -103.3700, "viviendas": 1600, "pct_horiz": 30.0, "densidad": 1200, "nse": "C+", "internet": 89.0, "denue": 3, "quadrant": "Q2", "cphp": 460.0},
+            {"ageb_id": "1403900010303", "city_id": "GDL", "city_name": "Guadalajara", "name": "Tlajomulco de Zúñiga Horiz", "lat": 20.4700, "lon": -103.4400, "viviendas": 8100, "pct_horiz": 96.0, "densidad": 4200, "nse": "C-", "internet": 69.0, "denue": 1, "quadrant": "Q3", "cphp": 385.0},
+            {"ageb_id": "1403900010304", "city_id": "GDL", "city_name": "Guadalajara", "name": "El Salto Parque Industrial", "lat": 20.5200, "lon": -103.2400, "viviendas": 490, "pct_horiz": 10.0, "densidad": 300, "nse": "D+", "internet": 52.0, "denue": 2, "quadrant": "Q4", "cphp": 680.0},
+
+            # TIJ
+            {"ageb_id": "0200400010401", "city_id": "TIJ", "city_name": "Tijuana", "name": "Agua Caliente / Chapultepec Residencial", "lat": 32.5100, "lon": -117.0100, "viviendas": 2900, "pct_horiz": 82.0, "densidad": 2200, "nse": "A/B", "internet": 88.0, "denue": 1, "quadrant": "Q1", "cphp": 410.0},
+            {"ageb_id": "0200400010402", "city_id": "TIJ", "city_name": "Tijuana", "name": "Zona Río Vertical / Corporativo", "lat": 32.5300, "lon": -117.0200, "viviendas": 1200, "pct_horiz": 20.0, "densidad": 900, "nse": "C+", "internet": 90.0, "denue": 3, "quadrant": "Q2", "cphp": 470.0},
+            {"ageb_id": "0200400010403", "city_id": "TIJ", "city_name": "Tijuana", "name": "Villa del Campo / Otay Periferia", "lat": 32.4800, "lon": -116.8500, "viviendas": 5400, "pct_horiz": 92.0, "densidad": 3600, "nse": "C-", "internet": 65.0, "denue": 1, "quadrant": "Q3", "cphp": 398.0},
+            {"ageb_id": "0200400010404", "city_id": "TIJ", "city_name": "Tijuana", "name": "Mesa de Otay Industrial", "lat": 32.5400, "lon": -116.9400, "viviendas": 410, "pct_horiz": 14.0, "densidad": 280, "nse": "D+", "internet": 50.0, "denue": 2, "quadrant": "Q4", "cphp": 640.0},
+
+            # MID
+            {"ageb_id": "3105000010501", "city_id": "MID", "city_name": "Mérida", "name": "Altabrisa / Temozón Norte Residencial", "lat": 21.0200, "lon": -89.5800, "viviendas": 3100, "pct_horiz": 86.0, "densidad": 2100, "nse": "A/B", "internet": 94.0, "denue": 1, "quadrant": "Q1", "cphp": 405.0},
+            {"ageb_id": "3105000010502", "city_id": "MID", "city_name": "Mérida", "name": "Paseo Montejo Centro Histórico", "lat": 20.9800, "lon": -89.6200, "viviendas": 1400, "pct_horiz": 45.0, "densidad": 1300, "nse": "C+", "internet": 87.0, "denue": 3, "quadrant": "Q2", "cphp": 455.0},
+            {"ageb_id": "3105000010503", "city_id": "MID", "city_name": "Mérida", "name": "Kanasín Periferia Horizontal", "lat": 20.9300, "lon": -89.5500, "viviendas": 4800, "pct_horiz": 95.0, "densidad": 3300, "nse": "C-", "internet": 67.0, "denue": 1, "quadrant": "Q3", "cphp": 392.0},
+            {"ageb_id": "3105000010504", "city_id": "MID", "city_name": "Mérida", "name": "Umán Corredor Industrial", "lat": 20.8800, "lon": -89.7400, "viviendas": 380, "pct_horiz": 18.0, "densidad": 250, "nse": "D+", "internet": 48.0, "denue": 2, "quadrant": "Q4", "cphp": 660.0},
+        ]
+
+        output = []
+        for item in raw_agebs:
+            if city_id and city_id.upper() != "MEXICO" and item["city_id"] != city_id.upper():
+                continue
+            if filter_quadrant and item["quadrant"] != filter_quadrant:
+                continue
+
+            q_id = item["quadrant"]
+            if q_id == "Q1":
+                q_title = "Cuadrante 1: Oportunidad Premium"
+                color = [0, 245, 212] # Verde cian neón
+                ocean = "Océano Azul (Alta Oportunidad / Competencia Moderada DENUE)"
+            elif q_id == "Q2":
+                q_title = "Cuadrante 2: Nicho Vertical / Corp"
+                color = [0, 180, 216] # Azul cian neón
+                ocean = "Nicho FTTB / Corporativo (Alta Plusvalía Vertical)"
+            elif q_id == "Q3":
+                q_title = "Cuadrante 3: Mercado Masivo Periferia"
+                color = [255, 183, 3] # Amarillo dorado neón
+                ocean = "Mercado Masivo Alta Densidad (Volumen Horizontal)"
+            else:
+                q_title = "Cuadrante 4: Descarte / Zonas Especiales"
+                color = [233, 69, 96] # Rojo coral
+                ocean = "Zona Industrial / Bajo Interés Comercial"
+
+            score = min(100.0, round((item["pct_horiz"] * 0.4) + (item["internet"] * 0.4) + ((5 - item["denue"]) * 4), 1))
+
+            output.append({
+                "ageb_id": item["ageb_id"],
+                "city_id": item["city_id"],
+                "city_name": item["city_name"],
+                "name": item["name"],
+                "coordinates": [item["lon"], item["lat"]],
+                "latitude": item["lat"],
+                "longitude": item["lon"],
+                "total_viviendas": item["viviendas"],
+                "pct_vivienda_horizontal": item["pct_horiz"],
+                "densidad_casas_sqkm": item["densidad"],
+                "nse_predominante": item["nse"],
+                "internet_penetration_pct": item["internet"],
+                "denue_competitors": item["denue"],
+                "cuadrante_id": q_id,
+                "cuadrante_nombre": q_title,
+                "score_factibilidad": score,
+                "cost_per_home_passed": item["cphp"],
+                "ocean_type": ocean,
+                "color": color,
+                "radius": math.sqrt(item["viviendas"]) * 6.5,
+                "tooltip_line1": f"AGEB {item['ageb_id']} — {item['name']} ({item['nse']})",
+                "tooltip_line2": f"Casas/km²: {item['densidad']:,} ({item['pct_horiz']}% Horiz) | CPHP Est: ${item['cphp']:.2f} MXN | DENUE: {item['denue']} comp | {q_title}"
+            })
+        return output
+
 if __name__ == "__main__":
     service = MapService()
     nodes = service.get_nodes_gis_data("CDMX")
@@ -317,5 +409,7 @@ if __name__ == "__main__":
     clusters = service.get_access_clusters_gis_data("CDMX")
     polys = service.get_coverage_polygons_gis_data("CDMX")
     clients = service.get_demo_clients_gis_data("CDMX")
+    agebs = service.get_ageb_market_feasibility_data("CDMX")
     print(f"--- MAP SERVICE DEMO (CDMX) ---")
-    print(f"Nodos: {len(nodes)} | Tramos: {len(links)} | Clusters: {len(clusters)} | Polígonos: {len(polys)} | Clientes Demo: {len(clients)}")
+    print(f"Nodos: {len(nodes)} | Tramos: {len(links)} | Clusters: {len(clusters)} | Polígonos: {len(polys)} | Clientes Demo: {len(clients)} | AGEBs Market: {len(agebs)}")
+
