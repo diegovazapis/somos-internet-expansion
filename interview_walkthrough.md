@@ -232,8 +232,9 @@ graph LR
 - **Módulo**: [`04_capacity.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/04_capacity.py) (Pestaña **🚨 Simulador de Crisis Backbone (2 Horas)**).
 - **Motor Backend Consumido**: [`risk_engine.py`](file:///c:/Users/diego/OneDrive/Documentos/Somos_Internet/risk_engine.py).
 - **Componentes**:
-  - Seleccionador del tramo afectado (`LINK_BB_CDMX_GDL`, `LINK_BB_CDMX_MTY`, `LINK_BB_GDL_TIJ`).
-  - Tarjetas de métricas de SLA ($99.999\%$) y tiempo de conmutación ($< 50\text{ ms}$).
+  - **Top 3 KPIs de Red**: **TTR (< 50 ms)**, **Disponibilidad SLA (99.999%)**, y **Pérdida por Fusión (≤ 0.05 dB)**.
+  - **Top 3 KPIs Operativos**: **MTTD (< 5 min iOTDR)**, **TTA (< 45 min Arribo)**, y **MTTR (< 120 min Reparación Física)**.
+  - **Estrategia OTDR Híbrida**: Comparativa visual entre Monitoreo Activo iOTDR 1625nm 24/7 y Certificación de Campo con OTDR Portátil EXFO/VIAVI.
   - Cronograma visual paso a paso de las 4 fases (0-15m, 15-45m, 45-90m, 90-120m) con estado de ejecución.
 
 ### 🔄 Flujo de la Información (Data Flow)
@@ -241,13 +242,14 @@ graph LR
 graph TD
     Link_Select[Selección Tramo Afectado] -->|Invocar Simulador| RiskEngine[risk_engine.py]
     RiskEngine -->|Recuperar Rutas Alternas 1+1| DB[(somos_network.db)]
-    RiskEngine -->|Generar Timeline 120m| CrisisUI[Pestaña Crisis Módulo 04]
+    RiskEngine -->|Monitoreo iOTDR 1625nm| CrisisUI[Pestaña Crisis Módulo 04]
+    CrisisUI -->|Métricas Red TTR < 50ms & MTTR < 2h| ExecutiveDashboard[Tablero de Control de Crisis]
 ```
 
 ### 🗣️ Forma de Presentar al Entrevistador (Script & Tips)
-- **Qué decir**: *"La Pregunta 06 sobre la falla crítica de 2 horas en el Backbone la simulamos en vivo en el Módulo 04. Ante un corte de fibra en el enlace CDMX-GDL, nuestra red conmuta en menos de 50 milisegundos a la ruta redundante por Monterrey, evitando la caída de tráfico. Aquí ven la secuencia exacta minuto a minuto de los 120 minutos..."*
-- **Acción en vivo**: Selecciona el tramo **`LINK_BB_CDMX_GDL`** y recorre las 4 fases en la pantalla.
-- **Tip de Impacto**: Este es uno de los momentos cumbre de la entrevista. Enfatiza que la resiliencia no es solo reactiva, sino que la arquitectura 1+1 absorbe el impacto de inmediato.
+- **Qué decir**: *"En el Módulo 04 evaluamos la resiliencia en crisis a través de 6 KPIs clave: 3 de Red (TTR < 50 ms, Uptime 99.999%, Pérdida por fusión ≤ 0.05 dB) y 3 Operativos (MTTD < 5 min vía iOTDR, TTA < 45 min y MTTR < 120 min). Adicionalmente, combinamos monitoreo automatizado iOTDR a 1625 nm fuera de banda con reflectometría portátil EXFO en sitio..."*
+- **Acción en vivo**: Selecciona el tramo **`LINK_BB_CDMX_GDL`**, muestra los dos bloques de KPIs (Red vs Operativos) y explica la diferencia entre iOTDR 1625nm y el OTDR portátil de campo.
+- **Tip de Impacto**: Enfatiza que la conmutación 1+1 DWDM en menos de 50 ms absorbe el impacto instantáneamente, protegiendo el 100% de los ingresos de contratos corporativos.
 
 ---
 

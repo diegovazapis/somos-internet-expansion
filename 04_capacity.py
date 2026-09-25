@@ -2,6 +2,7 @@
 =====================================================================
 SOMOS Internet — Expansión Nacional de Red de Fibra Óptica (México)
 Sprint 4: Streamlit Frontend — Módulo 04: Capacidad & Crisis Protocol
+Con KPIs de Red & Operativos de Crisis y Modelo de Medición OTDR Híbrido
 =====================================================================
 """
 
@@ -64,18 +65,105 @@ def render():
 
     with tab_crisis:
         st.subheader("🚨 Escenario de Crisis: Falla Crítica en Backbone (Primeras 2 Horas)")
-        st.error("⚠️ **Escenario Simulado**: Corte de fibra óptica por obra civil de terceros en el enlace Backbone CDMX - Guadalajara.")
+        st.error("⚠️ **Escenario Simulado**: Corte de fibra óptica por obra civil de terceros en el enlace Backbone Nacional.")
 
         risk_eng = RiskEngine()
         link_sel = st.selectbox("Seleccionar Tramo Backbone Afectado:", ["LINK_BB_CDMX_GDL", "LINK_BB_CDMX_MTY", "LINK_BB_GDL_TIJ"])
         crisis_data = risk_eng.simulate_backbone_crisis_protocol_2h(link_sel)
 
-        col_sla1, col_sla2 = st.columns(2)
-        with col_sla1:
-            st.metric("Disponibilidad Target SLA", crisis_data["sla_availability_target"])
-        with col_sla2:
-            st.metric("Conmutación Automática DWDM 1+1", "< 50 ms", delta="Protección Activa", delta_color="normal")
+        st.markdown("---")
+        st.markdown("### 📊 Matriz de KPIs Críticos de Crisis (Red vs Operativos)")
+        st.write("Medidores de desempeño prioritarios para salvaguardar la disponibilidad del 99.999% y minimizar el MTTR:")
 
+        # =====================================================================
+        # BLOQUE DE KPIS DE RED Y OPERATIVOS
+        # =====================================================================
+        col_kpi_red, col_kpi_ops = st.columns(2)
+
+        with col_kpi_red:
+            st.markdown("""
+                <div style="background-color: #0f2b1d; border-left: 5px solid #00f5d4; padding: 15px; border-radius: 6px;">
+                    <span style="font-size: 16px; color: #00f5d4; font-weight: bold;">🌐 Top 3 KPIs de Red (Infraestructura & Conmutación)</span>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            st.metric(
+                label="1. TTR (Time to Re-route / Conmutación 1+1)",
+                value="< 50 ms",
+                delta="Conmutación Óptica Automática DWDM / ERPS",
+                delta_color="normal"
+            )
+            st.caption("⏱️ **Objetivo**: Redireccionar el tráfico por la Ruta B disjunta de forma imperceptible para el usuario sin caída de sesiones.")
+
+            st.metric(
+                label="2. Disponibilidad Acumulada de Red (SLA Uptime)",
+                value="99.999 %",
+                delta="Cinco Nueves (Max 5.26 min/año)",
+                delta_color="normal"
+            )
+            st.caption("🔒 **Objetivo**: Garantía contractual para clientes FTTB/Enterprise AON P2P.")
+
+            st.metric(
+                label="3. Pérdida Máxima por Fusión (Splice Loss Index)",
+                value="≤ 0.05 dB",
+                delta="Empalme Limpio Certificado",
+                delta_color="normal"
+            )
+            st.caption("📉 **Objetivo**: Asegurar que la reparación física no introduzca atenuación en la ventana de 1550 nm.")
+
+        with col_kpi_ops:
+            st.markdown("""
+                <div style="background-color: #3d2600; border-left: 5px solid #ffb703; padding: 15px; border-radius: 6px;">
+                    <span style="font-size: 16px; color: #ffb703; font-weight: bold;">🛠️ Top 3 KPIs Operativos (Campo & Mantenimiento)</span>
+                </div>
+            """, unsafe_allow_html=True)
+
+            st.metric(
+                label="1. MTTD (Mean Time to Detect / Detección iOTDR)",
+                value="< 5 min",
+                delta="Telemetría iOTDR 1625nm Out-of-band",
+                delta_color="normal"
+            )
+            st.caption("🎯 **Objetivo**: Ubiación geográfica exacta (GPS) del corte desde el MicroPOP/NOC en menos de 5 minutos.")
+
+            st.metric(
+                label="2. TTA (Time to Arrive / Arribo de Brigada a Sitio)",
+                value="< 45 min",
+                delta="Despacho Urgente NOC / Campo",
+                delta_color="normal"
+            )
+            st.caption("🚚 **Objetivo**: Arribo de la cuadrilla de empalme con fusionadora al punto de falla.")
+
+            st.metric(
+                label="3. MTTR (Mean Time to Repair / Reparación Física)",
+                value="< 120 min",
+                delta="Restauración Total en 2 Horas",
+                delta_color="normal"
+            )
+            st.caption("🛠️ **Objetivo**: Fusión física de hilos, prueba de certificación OTDR y entrega del enlace a producción.")
+
+        st.markdown("---")
+        st.markdown("### 📡 Estrategia de Medición OTDR Híbrida (Interna + Externa)")
+        
+        col_otdr1, col_otdr2 = st.columns(2)
+
+        with col_otdr1:
+            st.info("""
+                **🛰️ Medición Interna Automatizada (iOTDR / RTU)**
+                - **Ubicación**: Integrado en transceptores SFP del MicroPOP / DWDM.
+                - **Longitud de Onda**: *Out-of-band* a **1625 nm** (Monitoreo en vivo 24/7 sin afectar datos).
+                - **Propósito**: Detección instantánea del corte y cálculo automático de distancia GPS al NOC en < 1 min.
+            """)
+
+        with col_otdr2:
+            st.success("""
+                **🧰 Medición Tradicional de Campo (OTDR Portátil EXFO / VIAVI)**
+                - **Ubicación**: Reflectómetro portátil en manos de la brigada de campo.
+                - **Longitud de Onda**: *In-band* en **1310 / 1550 nm**.
+                - **Propósito**: Guiar la fusión física hilo por hilo en sitio y certificar la entrega técnica (`.SOR`) a CFE.
+            """)
+
+        st.markdown("---")
         st.markdown("### ⏱️ Cronograma de Acción Ejecutiva (0 a 120 Minutos)")
 
         for step in crisis_data["timeline_first_2h"]:

@@ -2,31 +2,32 @@
 =====================================================================
 SOMOS Internet — Expansión Nacional de Red de Fibra Óptica (México)
 Sprint 4: Streamlit Frontend — Módulo 03: Modelo Operativo & Despliegue
-Con Motor Normativo Dinámico CFE / CRE / NOM y Buscador de Párrafos Literales
+Con Motor Normativo Dinámico CFE / CRE / NOM y Proyectos Especiales Off-Net TELMEX (ORCI IFT)
 =====================================================================
 """
 
 import streamlit as st
 
 def render():
-    st.title("🏗️ Módulo 3: Modelo Operativo, Despliegue & Motor Normativo CFE")
-    st.caption("Estructura de ejecución por fases, verificación de libramientos y motor de búsqueda de párrafos literales de la norma CFE GD-O-GEN-LC-001 / CRE / NOM")
+    st.title("🏗️ Módulo 3: Modelo Operativo, Despliegue & Proyectos Especiales Off-Net")
+    st.caption("Estructura de ejecución por fases, verificación CFE y Proyectos Especiales de Compartición con Carriers / TELMEX ORCI (IFT)")
 
     st.markdown("""
         <div style="background-color: #0f2b1d; border: 1px solid #00f5d4; border-radius: 8px; padding: 12px 18px; margin-bottom: 20px;">
-            <span style="font-size: 16px; color: #00f5d4; font-weight: bold;">📜 Biblioteca & Motor Normativo CFE Indexado Continuamente</span><br>
+            <span style="font-size: 16px; color: #00f5d4; font-weight: bold;">📜 Motor Normativo CFE & Proyectos Especiales Carrier (TELMEX ORCI / IFT)</span><br>
             <span style="font-size: 13px; color: #e0e0e0;">
-                Plataforma vinculada a las <b>Disposiciones Administrativas de Carácter General de la CRE (RES/1007/2018)</b>, 
-                <b>Lineamientos Técnicos CFE (GD-O-GEN-LC-001)</b>, <b>NOM-001-SEDE-2012 Art 800/820</b> y especificaciones de herrajes <b>CFE 2D100</b>.
+                Sincronizado con la <b>Oferta de Referencia de Compartición de Infraestructura Pasiva (ORCI TELMEX/IFT)</b>, 
+                <b>Lineamientos CFE (GD-O-GEN-LC-001)</b> y las <b>Disposiciones CRE (RES/1007/2018)</b> para canalización en ductos y pozos subterráneos.
             </span>
         </div>
     """, unsafe_allow_html=True)
 
-    tab1, tab2, tab3, tab4 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "🔍 Motor Normativo & Citas Literales CFE",
+        "🏢 Proyectos Especiales Carrier (TELMEX ORCI)",
         "📐 Simulador de Libramientos & Carga (ADSS)",
         "🔄 5 Fases del Modelo de Despliegue",
-        "📁 Expediente Digital SEAS CFE"
+        "📁 Expediente Digital SEAS CFE & SEG IFT"
     ])
 
     # =========================================================================
@@ -41,7 +42,7 @@ def render():
                 "norma": "Especificación CFE 2D100-01 / CFE GD-O-GEN-LC-001",
                 "seccion": "Capítulo 6: Requisitos Técnicos de Instalación Aérea, Sección 6.4.2 (Pág. 28)",
                 "cita": "«Los guardacabos deben ser fabricados en acero galvanizado por inmersión en caliente conforme a la norma NMX-H-004. Queda estrictamente prohibido el remate o sujeción directa del cable dieléctrico o mensajero sin el uso de guardacabos preformado de curvatura continua con radio mínimo R >= 38 mm, a fin de evitar el estrangulamiento, atenuación por macrocurvatura o fractura de los tubos holgados de fibra óptica.»",
-                "somos_impl": "SOMOS Internet especifica en su catálogo BOQ el uso exclusivo de guardacabos de gota reforzada galvanizados clase A con remate preformado dieléctrico helicoidal de agarre uniforme, garantizando 0.00 dB de atenación adicional por compresión mecáncia.",
+                "somos_impl": "SOMOS Internet especifica en su catálogo BOQ el uso exclusivo de guardacabos de gota reinforced galvanizados clase A con remate preformado dieléctrico helicoidal de agarre uniforme, garantizando 0.00 dB de atenuación adicional por compresión mecánica.",
                 "status": "CUMPLIDO ✅ (Inspección CFE Aprobada)",
                 "categoria": "Herrajes de Retención"
             },
@@ -127,33 +128,65 @@ def render():
         st.markdown(f"**🛠️ Alineación & Especificación Técnica SOMOS Internet**:")
         st.info(item_data['somos_impl'])
 
-        st.markdown("---")
-        st.markdown("### 📚 Catálogo de Normas e Índices Indexados en el Sistema")
-        
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            st.markdown("""
-                **⚡ CFE GD-O-GEN-LC-001**  
-                *Lineamientos Técnicos y Administrativos de Distribución CFE*  
-                `Estado: Indexado (154 Págs)`
-            """)
-        with c2:
-            st.markdown("""
-                **📜 CRE DACG RES/1007/2018**  
-                *Disposiciones de Acceso a Infraestructura del SEN*  
-                `Estado: Indexado (Vigente)`
-            """)
-        with c3:
-            st.markdown("""
-                **🔌 NOM-001-SEDE-2012 / 2018**  
-                *Instalaciones Eléctricas (Art 800 & 820)*  
-                `Estado: Indexado (Norma Oficial)`
-            """)
-
     # =========================================================================
-    # TAB 2: SIMULADOR DE LIBRAMIENTOS & CARGA MECÁNICA (ADSS)
+    # TAB 2: PROYECTOS ESPECIALES CARRIER (TELMEX ORCI / IFT)
     # =========================================================================
     with tab2:
+        st.subheader("🏢 Proyectos Especiales Off-Net & Compartición Carrier (TELMEX ORCI / IFT)")
+        st.write("Marco normativo y procedimiento de contratación para proyectos donde no exista postería CFE disponible (ej. Centros Históricos Subterráneos o Co-ubicación Carrier):")
+
+        st.markdown("""
+            <div style="background-color: #1a1a2e; border: 1px solid #e94560; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                <span style="font-size: 16px; color: #e94560; font-weight: bold;">📜 Oferta de Referencia de Compartición de Infraestructura Pasiva (ORCI TELMEX/TELNOR - IFT)</span><br>
+                <span style="font-size: 13px; color: #e0e0e0;">
+                    Regulada por el <b>Instituto Federal de Telecomunicaciones (IFT)</b> para el Agente Económico Preponderante (AEPT). 
+                    Permite a SOMOS Internet acceder a <b>ductos subterráneos, pozos de visita, registros, subidas a fachada y derechos de vía</b> bajo condiciones no discriminatorias.
+                </span>
+            </div>
+        """, unsafe_allow_html=True)
+
+        col_orci1, col_orci2 = st.columns(2)
+
+        with col_orci1:
+            st.markdown("#### 🛠️ Elementos de Obra Civil Disponibles (ORCI TELMEX)")
+            st.markdown("""
+                - **Ductos & Canalizaciones Subterráneas**: Acceso a la capacidad excedente en canalizaciones de concreto y tubo PAD (hasta **80% de ocupación máxima** regulada).
+                - **Pozos de Visita & Registros**: Alojamiento de cajas de empalme herméticas FOA AON P2P y distribución subterránea hacia edificios FTTB.
+                - **Subidas a Poste & Fachada**: Transición ordenada entre la red de ductos subterránea de Telmex y las canalizaciones del edificio cliente.
+                - **Trabajos Especiales IFT**: Proyectos con especificaciones técnicas ad hoc solicitados a través del **Sistema Electrónico de Gestión (SEG)** de Telmex.
+            """)
+
+        with col_orci2:
+            st.markdown("#### ⚖️ Comparativa de Alternativas de Despliegue Off-Net")
+            
+            deploy_mode = st.radio("Seleccionar Vía de Despliegue para Proyecto Especial:", [
+                "Vía A: Postería CFE Aérea (SEAS CFE) [Prioritaria]",
+                "Vía B: Ductos Subterráneos TELMEX (ORCI IFT) [Proyectos Especiales]",
+                "Vía C: Obra Civil Zanjado Subterráneo Propio [Última Opción]"
+            ])
+
+            if "Vía A" in deploy_mode:
+                st.success("🟢 **Vía A: CFE Aéreo (SEAS)**\n- CAPEX por Casa Pasada: **$418.18 MXN**\n- Tiempo de Trámite: **4 a 8 semanas**\n- Aplicación: 85% de la red urbana residencial.")
+            elif "Vía B" in deploy_mode:
+                st.warning("🟠 **Vía B: TELMEX Ductos (ORCI IFT)**\n- CAPEX por Casa Pasada: **$485.00 MXN**\n- Tiempo de Trámite: **6 a 10 semanas (Vía SEG)**\n- Aplicación: Centros Históricos, Polanco, Zona Financiera GDL/MTY.")
+            else:
+                st.error("🔴 **Vía C: Zanjado Propio**\n- CAPEX por Casa Pasada: **> $1,250.00 MXN**\n- Tiempo de Trámite: **16 a 24 semanas (Licencia Municipal)**\n- Aplicación: Solo en cruces de autopistas o sin alternativa de terceros.")
+
+        st.markdown("---")
+        st.markdown("#### 📜 Cita Literal de la Norma Regulatoria IFT (ORCI Telmex)")
+        st.markdown("""
+            <div style="background-color: #0f172a; border-left: 5px solid #e94560; padding: 15px; border-radius: 4px;">
+                <span style="color: #e94560; font-weight: bold; font-size: 14px;">📍 Resolución IFT P/IFT/EXT/071118/40 — Anexo ORCI Telmex, Sección 4.1 (Trabajos Especiales)</span><br><br>
+                <span style="font-style: italic; color: #ffffff; font-size: 14px;">
+                «TELMEX/TELNOR estará obligado a prestar los Servicios de Acceso y Compartición de Infraestructura Pasiva en favor del Concesionario Solicitante para el alojamiento de cables de fibra óptica en ductos, pozos y registros, bajo condiciones no discriminatorias. Cuando el proyecto requiera adecuaciones técnicas específicas, se tramitará la solicitud bajo la modalidad de Trabajos Especiales a través del Sistema Electrónico de Gestión (SEG), garantizando la no exclusividad y respetando la capacidad disponible de hasta el 80% de la canalización.»
+                </span>
+            </div>
+        """, unsafe_allow_html=True)
+
+    # =========================================================================
+    # TAB 3: SIMULADOR DE LIBRAMIENTOS & CARGA MECÁNICA (ADSS)
+    # =========================================================================
+    with tab3:
         st.subheader("📐 Verificador & Simulador de Libramientos Mecánicos CFE (ADSS)")
         st.write("Simula la factibilidad técnica en tiempo real ajustando las características del poste y del cable de fibra óptica:")
 
@@ -185,7 +218,6 @@ def render():
         with col_sim2:
             st.markdown("#### ✅ Resultados del Dictamen Técnico en Tiempo Real")
             
-            # Lógica de cálculo dinámico
             clearance_mt = 1.85 if "12m" in pole_type else 2.10
             sep_operadores = 0.35
             load_increase = 11.2 if "96" in cable_type else (14.1 if "144" in cable_type else 8.5)
@@ -211,15 +243,15 @@ def render():
             st.success("🟢 **DICTAMEN SEAS CFE**: FACTIBLE PARA ADOSAMIENTO DIRECTO (100% CUMPLIMIENTO NORMAS CFE / NOM)")
 
     # =========================================================================
-    # TAB 3: 5 FASES DEL DESPLIEGUE & GOBERNANZA
+    # TAB 4: 5 FASES DEL DESPLIEGUE & GOBERNANZA
     # =========================================================================
-    with tab3:
+    with tab4:
         st.markdown("### 🔄 5 Fases del Modelo de Despliegue Nacional")
 
         phases = [
-            ("1. Planeación & Diseño (0 - 4 sem)", "Levantamiento de infraestructura CFE existente, ingeniería de detalle (GIS), cálculo de cargas mecánicas en postería norma CFE GD-O-GEN-LC-001."),
-            ("2. Gestión de Permisos & CFE (4 - 12 sem)", "Trámite de convenios de adosamiento con divisiones regionales de CFE vía portal SEAS, permisos municipales de paso de vía y licencias urbanas."),
-            ("3. Construcción & Tendido (12 - 20 sem)", "Tendido de cable de fibra óptica ADSS 100% dieléctrico, instalación de herrajes de suspensión tipo J, remates preformados helicoidales y cajas de empalme."),
+            ("1. Planeación & Diseño (0 - 4 sem)", "Levantamiento de infraestructura CFE y ductos TELMEX/Carrier, ingeniería de detalle (GIS), cálculo de cargas mecánicas en postería norma CFE GD-O-GEN-LC-001 / ORCI."),
+            ("2. Gestión de Permisos & CFE/SEG (4 - 12 sem)", "Trámite de convenios de adosamiento CFE (SEAS) y solicitudes de ductos subterráneos TELMEX vía portal SEG IFT, permisos municipales de paso de vía."),
+            ("3. Construcción & Tendido (12 - 20 sem)", "Tendido de cable de fibra óptica ADSS 100% dieléctrico aéreo y submersible en ductos TELMEX, instalación de herrajes de suspensión J y remates preformados."),
             ("4. Empalme & Activación (20 - 24 sem)", "Fusión de hilos de fibra óptica, pruebas de reflectometría OTDR en ventanas 1310/1550 nm, certificación de enlace y comisión de MicroPOPs Activos FOA AON P2P."),
             ("5. Entrega & Operación NOC (24+ sem)", "Paso de la red a producción, monitoreo 24/7 en NOC con telemetría DDM/DOM puerto por puerto y habilitación comercial de clientes simétricos.")
         ]
@@ -236,33 +268,34 @@ def render():
         with col_cent:
             st.markdown("#### 🎯 Decisiones Centralizadas (Headquarters)")
             st.info("- **Estándares de Ingeniería & Red**: Arquitectura DWDM/ERPS/FOA AON P2P estandarizada.\n"
-                    "- **Negociación Nacional CFE**: Convenio marco corporativo de precios de adosamiento CRE.\n"
+                    "- **Negociación Nacional CFE & TELMEX**: Convenio marco corporativo CFE y contrato marco ORCI TELMEX/IFT.\n"
                     "- **Asignación de CAPEX**: Priorización nacional basada en VAN/ROI.\n"
                     "- **Homologación de Proveedores**: Homologación Tier 1 de fabricantes (Cisco, Huawei, Corning).")
 
         with col_loc:
             st.markdown("#### 🛠️ Ejecución Local (Gerencias Regionales)")
-            st.success("- **Gestión en Campo**: Supervisión directa de contratistas de tendido.\n"
+            st.success("- **Gestión en Campo**: Supervisión directa de contratistas de tendido aéreo y subterráneo.\n"
                        "- **Relación con Autoridades Municipales**: Tramitación de licencias de obra civil local.\n"
                        "- **Respuesta a Fichas de Incidencia**: Brigadas de empalme y mantenimiento 24/7.\n"
                        "- **Atención a Clientes Locales**: Coordinación de instalaciones de última milla.")
 
     # =========================================================================
-    # TAB 4: EXPEDIENTE DIGITAL SEAS CFE
+    # TAB 5: EXPEDIENTE DIGITAL SEAS CFE & SEG IFT
     # =========================================================================
-    with tab4:
-        st.subheader("📁 Expediente Digital de Solicitud SEAS CFE Distribución")
-        st.write("Checklist automatizado de documentos de ingeniería requeridos para la liberación de dictámenes técnicos CFE:")
+    with tab5:
+        st.subheader("📁 Expediente Digital de Solicitud SEAS CFE & SEG TELMEX")
+        st.write("Checklist automatizado de documentos de ingeniería requeridos para la liberación de dictámenes técnicos CFE y solicitudes de canalización TELMEX ORCI:")
 
-        st.checkbox("✅ 1. Plano Georreferenciado KMZ / AutoCAD con capas de postería CFE (Norma CFE-PROT)", value=True)
+        st.checkbox("✅ 1. Plano Georreferenciado KMZ / AutoCAD con capas de postería CFE y ductos TELMEX (Norma CFE-PROT / ORCI)", value=True)
         st.checkbox("✅ 2. Memoria de Cálculo Mecánico de Esfuerzos en Poste (Software CFE DCCIAMBT)", value=True)
-        st.checkbox("✅ 3. Ficha Técnica de Cable ADSS 100% Dieléctrico & Herrajes Homologados (CFE 2D100)", value=True)
-        st.checkbox("✅ 4. Reporte Fotográfico Georreferenciado de Levantamiento de Campo (Vista 360° por poste)", value=True)
-        st.checkbox("✅ 5. Copia Certificada de Título de Concesión IFT y Convenio Marco CFE / CRE", value=True)
+        st.checkbox("✅ 3. Ficha Técnica de Cable ADSS 100% Dieléctrico & Herrajes Homologados (CFE 2D100 / IEEE 1222)", value=True)
+        st.checkbox("✅ 4. Solicitud de Trabajos Especiales ingresada en el Sistema Electrónico de Gestión (SEG TELMEX / IFT)", value=True)
+        st.checkbox("✅ 5. Reporte Fotográfico Georreferenciado de Levantamiento de Campo (Pozos, Ductos y Postes)", value=True)
+        st.checkbox("✅ 6. Copia Certificada de Título de Concesión Única IFT y Convenios Marco CFE / CRE", value=True)
 
         st.markdown("---")
-        st.success("📄 **Estado del Expediente SEAS**: 100% COMPLETO & LISTO PARA INGRESO EN SISTEMA ELECTRONICO DE CFE DISTRIBUCIÓN.")
+        st.success("📄 **Estado del Expediente Integrado**: 100% COMPLETO & LISTO PARA INGRESO EN SEAS CFE Y SEG TELMEX.")
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="SOMOS Internet - Despliegue & CFE", layout="wide")
+    st.set_page_config(page_title="SOMOS Internet - Despliegue & CFE/TELMEX", layout="wide")
     render()
